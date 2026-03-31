@@ -1,0 +1,5 @@
+{
+  "name": "Flip Clock",
+  "description": "A digital clock with a black background and flipping notepad-style numbers.",
+  "requestFramePermissions": []
+}
