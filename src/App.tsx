@@ -71,40 +71,53 @@ function AnalogueClock({ time, color }: { time: Date, color: string }) {
 
   return (
     <div
-      className="relative flex items-center justify-center rounded-full bg-zinc-900 border border-zinc-800 shadow-2xl"
+      className="relative flex items-center justify-center rounded-full transition-colors duration-500"
       style={{
-        width: 'min(50vw, 70vh)',
-        height: 'min(50vw, 70vh)',
-        boxShadow: 'inset 0 0 40px rgba(0,0,0,0.8), 0 25px 50px -12px rgba(0,0,0,0.7)'
+        width: 'min(85vw, 85vh)',
+        height: 'min(85vw, 85vh)',
+        backgroundColor: 'transparent',
+        border: `min(0.8vw, 0.8vh) solid ${color}`,
+        boxShadow: `0 0 min(4vw, 4vh) ${color}, inset 0 0 min(4vw, 4vh) ${color}`
       }}
     >
-      {/* Dial markers */}
-      {[...Array(12)].map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-1 h-4 bg-zinc-700 rounded-full"
-          style={{
-            transform: `rotate(${i * 30}deg) translateY(min(-23vw, -33vh))`
-          }}
-        />
-      ))}
-      {[...Array(60)].map((_, i) => i % 5 !== 0 && (
-        <div
-          key={'min' + i}
-          className="absolute w-0.5 h-2 bg-zinc-800 rounded-full"
-          style={{
-            transform: `rotate(${i * 6}deg) translateY(min(-23vw, -33vh))`
-          }}
-        />
-      ))}
+      {/* Numbers 1-12 */}
+      {[...Array(12)].map((_, i) => {
+        const num = i === 0 ? 12 : i;
+        const angle = i * 30;
+        return (
+          <div
+            key={i}
+            className="absolute inset-0 flex items-start justify-center pointer-events-none"
+            style={{
+              transform: `rotate(${angle}deg)`,
+              paddingTop: '6%',
+            }}
+          >
+            <div
+              className="font-bold font-sans flex items-center justify-center transition-colors duration-500"
+              style={{
+                transform: `rotate(-${angle}deg)`,
+                color: color,
+                textShadow: `0 0 min(1.5vw, 1.5vh) ${color}, 0 0 min(3vw, 3vh) ${color}`,
+                fontSize: 'min(7vw, 7vh)',
+                lineHeight: 1
+              }}
+            >
+              {num}
+            </div>
+          </div>
+        );
+      })}
 
       {/* Hour Hand */}
       <motion.div
-        className="absolute w-2 rounded-full origin-bottom z-10"
+        className="absolute origin-bottom z-10 rounded-full transition-colors duration-500 pointer-events-none"
         style={{
-          height: 'min(14vw, 20vh)',
+          width: 'min(1.2vw, 1.2vh)',
+          height: '25%',
           bottom: '50%',
           backgroundColor: color,
+          boxShadow: `0 0 min(1.5vw, 1.5vh) ${color}, 0 0 min(3vw, 3vh) ${color}`,
         }}
         animate={{ rotate: hourDeg }}
         transition={{ type: "tween", ease: "linear", duration: 0.1 }}
@@ -112,12 +125,13 @@ function AnalogueClock({ time, color }: { time: Date, color: string }) {
 
       {/* Minute Hand */}
       <motion.div
-        className="absolute w-1.5 rounded-full origin-bottom z-20"
+        className="absolute origin-bottom z-20 rounded-full transition-colors duration-500 pointer-events-none"
         style={{
-          height: 'min(20vw, 28vh)',
+          width: 'min(0.8vw, 0.8vh)',
+          height: '35%',
           bottom: '50%',
           backgroundColor: color,
-          opacity: 0.8
+          boxShadow: `0 0 min(1.5vw, 1.5vh) ${color}, 0 0 min(3vw, 3vh) ${color}`,
         }}
         animate={{ rotate: minuteDeg }}
         transition={{ type: "tween", ease: "linear", duration: 0.1 }}
@@ -125,11 +139,13 @@ function AnalogueClock({ time, color }: { time: Date, color: string }) {
 
       {/* Second Hand */}
       <motion.div
-        className="absolute w-0.5 rounded-full origin-bottom z-30"
+        className="absolute origin-bottom z-30 rounded-full pointer-events-none"
         style={{
-          height: 'min(22vw, 30vh)',
+          width: 'min(0.4vw, 0.4vh)',
+          height: '45%',
           bottom: '50%',
-          backgroundColor: '#ef4444',
+          backgroundColor: '#ff00ff',
+          boxShadow: `0 0 min(1.5vw, 1.5vh) #ff00ff, 0 0 min(3vw, 3vh) #ff00ff`,
         }}
         animate={{ rotate: secondDeg }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
@@ -137,12 +153,14 @@ function AnalogueClock({ time, color }: { time: Date, color: string }) {
 
       {/* Center Dot */}
       <div
-        className="absolute w-4 h-4 rounded-full z-40 border-2 border-zinc-900"
-        style={{ backgroundColor: color }}
+        className="absolute rounded-full z-40 transition-colors duration-500 pointer-events-none"
+        style={{
+          width: 'min(3.5vw, 3.5vh)',
+          height: 'min(3.5vw, 3.5vh)',
+          backgroundColor: color,
+          boxShadow: `0 0 min(2vw, 2vh) ${color}`,
+        }}
       />
-
-      {/* Glass gradient overlay */}
-      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/5 to-transparent pointer-events-none z-50" />
     </div>
   );
 }
@@ -155,7 +173,7 @@ export default function App() {
 
   // New features state
   const [is12Hour, setIs12Hour] = useState(false);
-  const [clockColor, setClockColor] = useState('#f4f4f5'); // zinc-100 default
+  const [clockColor, setClockColor] = useState('#00e5ff'); // neon cyan default
   const [isAnalogue, setIsAnalogue] = useState(false);
 
   useEffect(() => {
